@@ -1,0 +1,19 @@
+<form [formGroup]="form" (ngSubmit)="register()">
+  <div class="flex flex-column gap-4 border-3">
+    <div>
+      <p-iconfield>
+
+        <input type="text" pInputText placeholder="Search" formControlName="email"/>
+      </p-iconfield>
+    </div>
+    <div>
+      <p-iconfield>
+
+        <p-password [toggleMask]="true" formControlName="password"/>
+      </p-iconfield>
+    </div>
+    <div>
+      <p-button type="submit" label="Salvar" styleClass="w-full"/>
+    </div>
+  </div>
+</form>

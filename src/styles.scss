@@ -1,0 +1,24 @@
+/* You can add global styles to this file, and also import other style files */
+
+@use "topography";
+
+*{
+  font-family: Montserrat, sans-serif;
+  font-size: 12px;
+}
+
+:root {
+  --primary-color: #C3A83C;
+}
+
+.h-screen{
+  height: 100dvh;
+  margin: 0;
+  padding: 0;
+}
+
+.grid {
+  margin: 0;
+  padding: 0;
+}
+

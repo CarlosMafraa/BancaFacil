@@ -1,0 +1,35 @@
+<div class="h-screen">
+  <div class="flex justify-content-center align-items-center h-full">
+    <div class="flex flex-column gap-4 border-3">
+      <div>
+        <p-iconfield>
+          <p-inputicon>
+            <span class="material-symbols-outline">home</span>
+          </p-inputicon>
+          <input type="text" pInputText placeholder="Search"/>
+        </p-iconfield>
+      </div>
+      <div>
+        <p-iconfield>
+          <p-inputicon>
+          <span class="material-symbols-outline">
+home
+</span>
+          </p-inputicon>
+          <p-password [(ngModel)]="password" [toggleMask]="true"/>
+        </p-iconfield>
+      </div>
+      <div>
+        <p-button label="Entrar" styleClass="w-full"/>
+      </div>
+      <div class="flex justify-content-center cursor-pointer">
+        <a>Esqueceu sua senha?</a>
+      </div>
+      <div class="flex justify-content-center cursor-pointer">
+        <a>Cadastra-se</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-register></app-register>
