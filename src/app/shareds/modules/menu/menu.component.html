@@ -1,1 +1,7 @@
-<p>menu works!</p>
+<div class="px-3 py-1">
+  @for (item of itens; track item) {
+    <div>
+      <app-menu-item [icon]=item.icon [name]=item.name></app-menu-item>
+    </div>
+  }
+</div>

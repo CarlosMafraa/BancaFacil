@@ -1,5 +1,7 @@
 import {Injectable} from '@angular/core';
 import {AngularFireAuth} from '@angular/fire/compat/auth';
+import {AngularFirestore} from '@angular/fire/compat/firestore';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable({
   providedIn: 'root'
@@ -7,15 +9,46 @@ import {AngularFireAuth} from '@angular/fire/compat/auth';
 export class RegisterService {
 
   constructor(
-    private serviceAuth: AngularFireAuth
+    private serviceAuth: AngularFireAuth,
+    private firestore: AngularFirestore
   ) {}
 
-  public async register(email: string, password: string) {
+  public async register(
+    nome: string,
+    sobrenome: string,
+    email: string,
+    senha: string,
+    perfil: string,
+    instituicao: string
+  ): Promise<void> {
     try {
-      await this.serviceAuth.createUserWithEmailAndPassword(email, password);
-      console.log('Usuário criado com sucesso!');
+
+      const signInMethods = await this.serviceAuth.fetchSignInMethodsForEmail(email);
+      if (signInMethods.length > 0) {
+        throw new Error('Este email já está registrado. Tente outro.');
+      }
+
+      const senhaCriptografada = bcrypt.hashSync(senha, 10);
+
+      const userCredential = await this.serviceAuth.createUserWithEmailAndPassword(email, senha);
+      const uid = userCredential.user?.uid;
+
+      if (uid) {
+        await this.firestore.collection('usuarios').doc(uid).set({
+          nome,
+          sobrenome,
+          email,
+          perfil,
+          instituicao,
+          senha: senhaCriptografada,
+          criadoEm: new Date(),
+          atualizado: new Date(),
+        });
+        console.log('Usuário salvo no Firestore com sucesso!');
+      }
     } catch (error) {
-      console.error(error);
+      console.error('Erro ao registrar usuário:', error);
+      throw error;
     }
   }
 }

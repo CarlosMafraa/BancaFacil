@@ -1,26 +1,28 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {IconField} from 'primeng/iconfield';
 import {Password} from 'primeng/password';
 import {Button} from 'primeng/button';
 import {InputText} from 'primeng/inputtext';
 import {RegisterService} from '../../services/register/register.service';
+import {FloatLabel} from "primeng/floatlabel";
+import {RadioButton} from 'primeng/radiobutton';
 
 @Component({
   selector: 'app-register',
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    IconField,
     Password,
     Button,
-    InputText
+    InputText,
+    FloatLabel,
+    RadioButton
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
 })
 export class RegisterComponent implements OnInit {
-  public form!: FormGroup;
+  public formGroup!: FormGroup;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -33,17 +35,30 @@ export class RegisterComponent implements OnInit {
   }
 
   public initForm(): void {
-    this.form = this.formBuilder.group({
-      email: ['', Validators.required, Validators.email],
-      password: ['', Validators.required]
-    })
+    this.formGroup = this.formBuilder.group(
+      {
+        nome: ['', Validators.required],
+        sobrenome: ['', Validators.required],
+        email: ['', [Validators.required, Validators.email]],
+        senha: ['', [Validators.required, Validators.minLength(8)]],
+        perfil: ['',Validators.required],
+        instituicao: ['',Validators.required]
+      });
   }
 
-  public register(): void {
-    const email = this.form.get('email')?.value
-    const senha = this.form.get('password')?.value
-    console.log(email)
-    console.log(senha)
-    this.service.register(email, senha).then();
+
+  public async register(): Promise<void> {
+    if (this.formGroup.valid) {
+      const { nome, sobrenome, email, senha, perfil, instituicao } = this.formGroup.value;
+      try {
+        await this.service.register(nome, sobrenome, email, senha, perfil, instituicao);
+        console.log('Usuário registrado com sucesso!');
+      } catch (error) {
+        console.error('Erro ao registrar usuário:', error);
+      }
+    } else {
+      console.error('Formulário inválido.');
+    }
   }
+
 }

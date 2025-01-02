@@ -11,6 +11,8 @@ import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
 import {AngularFireAuth} from '@angular/fire/compat/auth';
 import {getAuth, provideAuth} from '@angular/fire/auth';
 import {FIREBASE_OPTIONS} from '@angular/fire/compat';
+import {authInterceptor} from './services/interceptor/auth.interceptor';
+import {provideHttpClient, withFetch, withInterceptors} from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -25,9 +27,12 @@ export const appConfig: ApplicationConfig = {
     }),
     importProvidersFrom(AngularFireAuth),
     provideAuth(() => getAuth()),
+    provideHttpClient(
+      withInterceptors([authInterceptor]),
+      withFetch()
+    ),
     provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
     {provide: FIREBASE_OPTIONS, useValue: environment.firebaseConfig},
-    // provideAuth(() => getAuth()),
     // provideFirestore(() => getFirestore()),
     // provideMessaging(() => getMessaging()),
     // providePerformance(() => getPerformance()),
